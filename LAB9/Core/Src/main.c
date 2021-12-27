@@ -133,6 +133,10 @@ void calculateDisplayBase(uint8_t *string, int *x_base, int *y_base, int mode) {
 
 }
 
+void showString(uint8_t *string, int mode){
+	calculateDisplayBase((uint8_t*)"FALSE", x_base, y_base, mode);
+}
+
 /* USER CODE END 0 */
 
 /**

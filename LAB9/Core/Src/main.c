@@ -54,6 +54,8 @@ int y = 20;
 int* x_base = &x;
 int* y_base = &y;
 int IsSetUp = 0;
+int timeLeft = 8;
+int* timeBar = &timeLeft;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -67,6 +69,7 @@ void SystemClock_Config(void);
 void connectionCheck(){
 	LCD_ShowString(10, 0, 90, 19, 12, (uint8_t*)"192.168.0.123");
     LCD_ShowString(145, 5, 90, 10, 12, (uint8_t*)"CS301 Project");
+    showTimeBar(timeBar);
     POINT_COLOR = BLACK;
     LCD_DrawLine(0,20,239,20);
     LCD_DrawLine(20,20,20,319);
@@ -137,6 +140,13 @@ void showString(uint8_t *string, int mode){
 	calculateDisplayBase(string, x_base, y_base, mode);
 }
 
+void showTimeBar(int* timeBar){
+	int total = 200;
+	int timeLeft = *timeBar;
+	int display = 200-20*(10-timeLeft);
+	LCD_Fill(20,300,display,320,BLACK);
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -177,7 +187,7 @@ int main(void)
   connectionCheck();
   while (1)
   {
-	  calculateDisplayBase((uint8_t*)"Is earth flat? wawaksdjadanak", x_base, y_base, 1);
+	  calculateDisplayBase((uint8_t*)"Is earth flat? is this normal", x_base, y_base, 1);
 	  calculateDisplayBase((uint8_t*)"FALSE", x_base, y_base, 0);
 	  HAL_Delay(5000);
 

@@ -54,7 +54,8 @@ int y = 20;
 int* x_base = &x;
 int* y_base = &y;
 int IsSetUp = 0;
-int timeBar = 10;
+int timeLeft = 8;
+int* timeBar = &timeLeft;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -74,7 +75,7 @@ void connectionCheck(){
     LCD_DrawLine(0,20,239,20);
     LCD_DrawLine(20,20,20,319);
     LCD_DrawLine(221,20,221,319);
-    showTimeBar();
+    showTimeBar(timeBar);
 	BACK_COLOR = WHITE;
     if (IsSetUp) {
 		POINT_COLOR = RED;
@@ -118,6 +119,7 @@ void calculateDisplayBase(uint8_t *string, int *x_base, int *y_base, int mode) {
     }
     if (mode == 1) {
         x = 20;
+
         LCD_Fill(1,y,19,y+15,BLUE);
         POINT_COLOR = BLUE;
     } else if (mode == 0) {
@@ -141,10 +143,12 @@ void showString(uint8_t *string, int mode){
 	calculateDisplayBase(string, x_base, y_base, mode);
 }
 
-void showTimeBar(){
-	LCD_Fill(20,300,300,320);
+void showTimeBar(int* timeBar){
+	int total = 200;
+	int timeLeft = *timeBar;
+	int display = 200-20*(10-timeLeft);
+	LCD_Fill(20,300,display,320,BLACK);
 }
-
 /* USER CODE END 0 */
 
 /**

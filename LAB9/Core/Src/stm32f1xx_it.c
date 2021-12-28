@@ -221,6 +221,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 	if(huart->Instance==USART1){
 
 		static unsigned char uLength = 0;
+		delay_ms(10);
 		if(rxBuffer[0] == '\n'){
 			if(flag)
 			{

@@ -200,6 +200,12 @@ void SysTick_Handler(void)
 /**
   * @brief This function handles USART1 global interrupt.
   */
+uint8_t rxBuffer[20];
+unsigned char newstr[1024];
+unsigned char uRx_Data[1024] = {0};
+int Answer=0;
+int flag=1;
+int score=0;
 void USART1_IRQHandler(void)
 {
   /* USER CODE BEGIN USART1_IRQn 0 */
@@ -207,10 +213,87 @@ void USART1_IRQHandler(void)
   /* USER CODE END USART1_IRQn 0 */
   HAL_UART_IRQHandler(&huart1);
   /* USER CODE BEGIN USART1_IRQn 1 */
-
+  HAL_UART_Receive_IT(&huart1,(uint8_t *)rxBuffer,1);
+//  sprintf(newstr,newstr,rxBuffer);
   /* USER CODE END USART1_IRQn 1 */
 }
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
+	if(huart->Instance==USART1){
 
+		static unsigned char uLength = 0;
+		if(rxBuffer[0] == '\n'){
+			if(flag)
+			{
+				sprintf(newstr," Ack: %s",uRx_Data);
+				uint8_t title[1024]={0};
+				for(int i=0;i<uLength-2;i++)
+				{
+					title[i]=uRx_Data[i];
+				}
+				title[uLength-2]='?';
+				showString(title,1);
+				if(uRx_Data[uLength-1]=='T')
+				{
+					Answer=1;
+				}
+				else
+				{
+					Answer=0;
+				}
+				HAL_UART_Transmit(&huart1, uRx_Data, uLength, 0xffff);
+				uLength = 0;
+				flag=0;
+			}
+			else
+			{
+				int tmp=0;
+				if(uRx_Data[0]=='T'){
+					tmp=1;
+				}
+				else if(uRx_Data[0]=='F'){
+					tmp=0;
+				}
+				else{
+					tmp=3;
+				}
+				HAL_UART_Transmit(&huart1, uRx_Data, uLength, 0xffff);
+				if(tmp==Answer)
+				{
+					showString("AC!",1);
+					score+=5;
+				}
+				else
+				{
+					showString("WA!",1);
+				}
+				int digits=0;
+				int stmp=score;
+				while(stmp>0)
+				{
+					stmp/=10;
+					digits++;
+				}
+				stmp=score;
+//				unsigned char uu[1]={0};
+//				uu[0]=digits+'0';
+//				showString(uu,1);
+				unsigned char scoreToShow[1024]={0};
+				for(int i=digits-1;i>=0;i--){
+					scoreToShow[i]='0'+stmp%10;
+					stmp/=10;
+				}
+				showString("score:",1);
+				showString(scoreToShow,1);
+				uLength=0;
+				flag=1;
+			}
+
+		}else{
+			uRx_Data[uLength] = rxBuffer[0];
+			uLength++;
+		}
+	}
+}
 /* USER CODE BEGIN 1 */
 
 /* USER CODE END 1 */

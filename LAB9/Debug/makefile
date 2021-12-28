@@ -12,6 +12,7 @@ RM := rm -rf
 -include Drivers/STM32F1xx_HAL_Driver/Src/subdir.mk
 -include Core/Startup/subdir.mk
 -include Core/Src/subdir.mk
+-include subdir.mk
 -include objects.mk
 
 ifneq ($(MAKECMDGOALS),clean)
@@ -61,8 +62,8 @@ all:
 main-build: LAB9.elf secondary-outputs
 
 # Tool invocations
-LAB9.elf: $(OBJS) $(USER_OBJS) C:\Users\Administrator\Desktop\LAB9\STM32F103RCTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "LAB9.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\Users\Administrator\Desktop\LAB9\STM32F103RCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="LAB9.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+LAB9.elf: $(OBJS) $(USER_OBJS) C:\Users\Johnny\Documents\GitHub\CS301-Group-Project\LAB9\STM32F103RCTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "LAB9.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\Users\Johnny\Documents\GitHub\CS301-Group-Project\LAB9\STM32F103RCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="LAB9.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -83,7 +84,7 @@ LAB9.bin: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 
 # Other Targets
 clean:
-	-$(RM) LAB9.bin LAB9.elf LAB9.list default.size.stdout
+	-$(RM) $(SIZE_OUTPUT)$(OBJDUMP_LIST)$(EXECUTABLES)$(OBJS)$(S_DEPS)$(S_UPPER_DEPS)$(C_DEPS)$(OBJCOPY_BIN) LAB9.elf
 	-@echo ' '
 
 post-build:
@@ -99,6 +100,6 @@ fail-specified-linker-script-missing:
 warn-no-linker-script-specified:
 	@echo 'Warning: No linker script specified. Check the linker settings in the build configuration.'
 
-.PHONY: all clean dependents main-build fail-specified-linker-script-missing warn-no-linker-script-specified post-build
+.PHONY: all clean dependents fail-specified-linker-script-missing warn-no-linker-script-specified post-build
 
 -include ../makefile.targets

@@ -52,7 +52,7 @@ extern "C" {
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
-
+void showString(uint8_t* string, int mode);
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */

@@ -54,6 +54,7 @@ int y = 20;
 int* x_base = &x;
 int* y_base = &y;
 int IsSetUp = 0;
+int timeBar = 10;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -64,6 +65,8 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+extern UART_HandleTypeDef huart1;
+extern uint8_t rxBuffer[20];
 void connectionCheck(){
 	LCD_ShowString(10, 0, 90, 19, 12, (uint8_t*)"192.168.0.123");
     LCD_ShowString(145, 5, 90, 10, 12, (uint8_t*)"CS301 Project");
@@ -71,6 +74,7 @@ void connectionCheck(){
     LCD_DrawLine(0,20,239,20);
     LCD_DrawLine(20,20,20,319);
     LCD_DrawLine(221,20,221,319);
+    showTimeBar();
 	BACK_COLOR = WHITE;
     if (IsSetUp) {
 		POINT_COLOR = RED;
@@ -137,6 +141,10 @@ void showString(uint8_t *string, int mode){
 	calculateDisplayBase(string, x_base, y_base, mode);
 }
 
+void showTimeBar(){
+	LCD_Fill(20,300,300,320);
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -168,7 +176,8 @@ int main(void)
   MX_GPIO_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  //HAL_UART_Receive_IT(&huart1,(uint8_t*)aRxBuffer,11);
+  HAL_UART_Receive_IT(&huart1,(uint8_t *)rxBuffer,1);
+//  showString(newstr);
 
   /* USER CODE END 2 */
 
@@ -177,9 +186,9 @@ int main(void)
   connectionCheck();
   while (1)
   {
-	  calculateDisplayBase((uint8_t*)"Is earth flat? wawaksdjadanak", x_base, y_base, 1);
-	  calculateDisplayBase((uint8_t*)"FALSE", x_base, y_base, 0);
-	  HAL_Delay(5000);
+//	  calculateDisplayBase((uint8_t*)"Is earth flat? wawaksdjadanak", x_base, y_base, 1);
+//	  calculateDisplayBase((uint8_t*)"FALSE", x_base, y_base, 0);
+//	  HAL_Delay(5000);
 
 
     /* USER CODE END WHILE */
